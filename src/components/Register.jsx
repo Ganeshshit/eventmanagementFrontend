@@ -106,10 +106,8 @@ const RegisterForm = () => {
   return (
     <form onSubmit={handleSubmit} style={formStyle}>
       <h2 style={{ textAlign: "center" }}>Register</h2>
-
       {error && <div style={messageStyle}>{error}</div>}
       {success && <div style={messageStyle}>{success}</div>}
-
       <label htmlFor="name">Name</label>
       <input
         type="text"
@@ -121,7 +119,6 @@ const RegisterForm = () => {
         required
         style={inputStyle}
       />
-
       <label htmlFor="email">Email</label>
       <input
         type="email"
@@ -133,7 +130,6 @@ const RegisterForm = () => {
         required
         style={inputStyle}
       />
-
       <label htmlFor="password">Password</label>
       <input
         type="password"
@@ -148,6 +144,7 @@ const RegisterForm = () => {
       <button type="submit" style={buttonStyle}>
         Register
       </button>
+      <label htmlFor="">Already have an acoount </label> <a href="/login">Login</a>
     </form>
   );
 };

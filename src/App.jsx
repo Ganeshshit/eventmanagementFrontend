@@ -1,11 +1,7 @@
-// client/src/App.jsx
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./App.css";
-import './index.css'
 import { Link } from "react-router-dom";
-
+import Layout from "./components/Laout";
 function App() {
   const [events, setEvents] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -37,12 +33,19 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const token=localStorage.getItem('authToken')
     axios
-      .post("https://eventbackend-7ny5.onrender.com/api/events/create", formData)
+      .post(
+        "https://eventbackend-7ny5.onrender.com/api/events/create",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send the JWT token in Authorization header
+          },
+        }
+      )
       .then((response) => {
-        // handle success
         console.log("Event added successfully:", response.data);
-        // Reset the form
         setFormData({
           title: "",
           description: "",
@@ -52,7 +55,6 @@ function App() {
         setIsSuccess(true);
       })
       .catch((error) => {
-        // handle error
         setIsSuccess(false);
         console.error("Error adding event:", error);
       });
@@ -62,166 +64,232 @@ function App() {
     axios
       .delete(`https://eventbackend-7ny5.onrender.com/api/events/${id}`)
       .then((response) => {
-        // handle success
         console.log("Event deleted successfully:", response.data);
         setIsSuccess(true);
       })
       .catch((error) => {
-        // handle error
         setIsSuccess(false);
         console.error("Error deleting event:", error);
       });
   };
 
   return (
-    <div>
-      <div class="">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container my-2">
-            <h4>GFG Event Dashboard</h4>
+    <Layout>
+      <div style={{ fontFamily: "Arial, sans-serif" }}>
+        <div>
+          <nav
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              backgroundColor: "#f8f9fa",
+              padding: "1rem",
+              borderBottom: "1px solid #e0e0e0",
+            }}
+          >
+            <h4 style={{ margin: 0 }}>GFG Event Dashboard</h4>
             <div>
               <button
                 type="button"
-                class="btn btn-success mx-3"
+                style={{
+                  backgroundColor: "#28a745",
+                  color: "white",
+                  border: "none",
+                  padding: "0.5rem 1rem",
+                  marginRight: "1rem",
+                  cursor: "pointer",
+                }}
                 data-toggle="modal"
                 data-target="#exampleModal"
               >
                 Add Event
               </button>
-              <Link class="btn btn-primary ml-auto" to="/">
+              <Link
+                to="/"
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  textDecoration: "none",
+                  borderRadius: "5px",
+                }}
+              >
                 Home
               </Link>
             </div>
-          </div>
-        </nav>
-        <div class="container">
-          <h5 class="text-center my-2">List of Events</h5>
-          <table class="table table-striped border">
-            <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Title</th>
-                <th scope="col">Date</th>
-                <th scope="col">Update</th>
-                <th scope="col">Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {events?.map((event) => (
-                <tr key={event._id}>
-                  <th>{event._id}</th>
-                  <th>{event.title}</th>
-                  <td>{event.date}</td>
+          </nav>
 
-                  <td>
-                    <Link
-                      class="btn btn-primary ml-auto"
-                      to={`/update/${event._id}`}
-                    >
-                      Update
-                    </Link>
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => handleDelete(event._id)}
-                      className="btn btn-danger"
-                    >
-                      Delete
-                    </button>
-                  </td>
+          <div style={{ padding: "2rem" }}>
+            <h5 style={{ textAlign: "center", marginBottom: "2rem" }}>
+              List of Events
+            </h5>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr>
+                  <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    Id
+                  </th>
+                  <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    Title
+                  </th>
+                  <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    Date
+                  </th>
+                  <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    Update
+                  </th>
+                  <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    Delete
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {events?.map((event) => (
+                  <tr key={event._id}>
+                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                      {event._id}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                      {event.title}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                      {event.date}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                      <Link
+                        to={`/update/${event._id}`}
+                        style={{
+                          backgroundColor: "#007bff",
+                          color: "white",
+                          padding: "0.3rem 0.7rem",
+                          textDecoration: "none",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        Update
+                      </Link>
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                      <button
+                        onClick={() => handleDelete(event._id)}
+                        style={{
+                          backgroundColor: "#dc3545",
+                          color: "white",
+                          padding: "0.3rem 0.7rem",
+                          border: "none",
+                          cursor: "pointer",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                Add New Event
-              </h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form onSubmit={handleSubmit}>
-                <div class="form-group">
-                  <label for="inputAddress">Title</label>
-                  <input
-                    onChange={handleInputChange}
-                    value={formData.title}
-                    type="text"
-                    class="form-control"
-                    name="title"
-                    id="inputAddress"
-                    placeholder="Event Title"
-                  />
-                </div>
-
-                <div class="form-group mt-2">
-                  <label for="inputAddress2">Description</label>
-                  <input
-                    onChange={handleInputChange}
-                    value={formData.description}
-                    type="text"
-                    class="form-control"
-                    name="description"
-                    id="inputAddress2"
-                    placeholder="Enter Description"
-                  />
-                </div>
-
-                <div class="form-group mt-2">
-                  <label for="inputAddress2">Location</label>
-                  <input
-                    onChange={handleInputChange}
-                    value={formData.location}
-                    type="text"
-                    class="form-control"
-                    name="location"
-                    id="inputAddress2"
-                    placeholder="Enter Location"
-                  />
-                </div>
-
-                <div class="form-group mt-2">
-                  <label for="inputAddress2">Date</label>
-                  <input
-                    onChange={handleInputChange}
-                    value={formData.date}
-                    type="date"
-                    class="form-control"
-                    name="date"
-                    id="inputAddress2"
-                    placeholder="Enter Date"
-                  />
-                </div>
-
-                <button type="submit" class="btn btn-primary mt-3">
-                  Add Event
+        <div
+          className="modal fade"
+          id="exampleModal"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Add New Event
+                </h5>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
                 </button>
-              </form>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={handleSubmit}>
+                  <div style={{ marginBottom: "1rem" }}>
+                    <label htmlFor="inputAddress">Title</label>
+                    <input
+                      onChange={handleInputChange}
+                      value={formData.title}
+                      type="text"
+                      className="form-control"
+                      name="title"
+                      id="inputAddress"
+                      placeholder="Event Title"
+                      style={{ width: "100%", padding: "0.5rem" }}
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "1rem" }}>
+                    <label htmlFor="inputAddress2">Description</label>
+                    <input
+                      onChange={handleInputChange}
+                      value={formData.description}
+                      type="text"
+                      className="form-control"
+                      name="description"
+                      id="inputAddress2"
+                      placeholder="Enter Description"
+                      style={{ width: "100%", padding: "0.5rem" }}
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "1rem" }}>
+                    <label htmlFor="inputAddress2">Location</label>
+                    <input
+                      onChange={handleInputChange}
+                      value={formData.location}
+                      type="text"
+                      className="form-control"
+                      name="location"
+                      id="inputAddress2"
+                      placeholder="Enter Location"
+                      style={{ width: "100%", padding: "0.5rem" }}
+                    />
+                  </div>
+
+                  <div style={{ marginBottom: "1rem" }}>
+                    <label htmlFor="inputAddress2">Date</label>
+                    <input
+                      onChange={handleInputChange}
+                      value={formData.date}
+                      type="date"
+                      className="form-control"
+                      name="date"
+                      id="inputAddress2"
+                      style={{ width: "100%", padding: "0.5rem" }}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      backgroundColor: "#007bff",
+                      color: "white",
+                      padding: "0.5rem 1rem",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Add Event
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

@@ -1,5 +1,3 @@
-// client/src/Home.jsx
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -19,63 +17,111 @@ const Home = () => {
       });
   }, []);
 
+  // Inline styles
+  const containerStyle = {
+    margin: "20px auto",
+    maxWidth: "1140px",
+  };
+
+  const navStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "10px 15px",
+    backgroundColor: "#f8f9fa",
+  };
+
+  const cardStyle = {
+    margin: "15px 0",
+    padding: "15px",
+    border: "1px solid #ddd",
+    borderRadius: "5px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+  };
+
+  const cardBodyStyle = {
+    padding: "20px",
+  };
+
+  const datePrimaryStyle = {
+    display: "inline-block",
+    textAlign: "center",
+    marginRight: "10px",
+  };
+
+  const dateDayStyle = {
+    fontSize: "1.5rem",
+    fontWeight: "bold",
+    display: "block",
+  };
+
+  const dateMonthStyle = {
+    fontSize: "1rem",
+    display: "block",
+  };
+
+  const meetingInfoStyle = {
+    display: "inline-block",
+  };
+
+  const btnStyle = {
+    marginTop: "10px",
+    padding: "5px 10px",
+    border: "1px solid #007bff",
+    color: "#007bff",
+    borderRadius: "4px",
+    textDecoration: "none",
+    cursor: "pointer",
+  };
+
   return (
-    <div>
-      <div className="container">
-        <nav
-          className="navbar navbar-expand-lg 
-                                navbar-light bg-light"
-        >
-          <div className="container my-2">
-            <h4>GFG Event</h4>
-            <Link className="btn btn-primary ml-auto" to="/dashboard">
-              Dashboard
-            </Link>
-          </div>
-        </nav>
-        <div className="row my-3">
-          {events.map((event) => {
-            const date = new Date(event.date);
-            const day = date.getDate();
-            const month = date.toLocaleString("default", { month: "short" });
-            const year = date.getFullYear();
-            return (
-              <div className="col-lg-4" key={event.id}>
-                <div className="card card-margin">
-                  <div className="card-body pt-2">
-                    <div className="widget-49">
-                      <div className="widget-49-title-wrapper">
-                        <div className="widget-49-date-primary">
-                          <span className="widget-49-date-day">{day}</span>
-                          <span className="widget-49-date-month">{month}</span>
-                        </div>
-                        <div className="widget-49-meeting-info">
-                          <span className="widget-49-pro-title">
-                            <b>{event.title}</b>
-                          </span>
-                          <span className="widget-49-pro-title">
-                            <b>{event.location}</b>
-                          </span>
-                        </div>
+    <div style={containerStyle}>
+      <nav style={navStyle}>
+        <h4>GFG Event</h4>
+        <Link to="/dashboard" className="btn btn-primary ml-auto">
+          Dashboard
+        </Link>
+      </nav>
+      <div className="row my-3">
+        {events.map((event) => {
+          const date = new Date(event.date);
+          const day = date.getDate();
+          const month = date.toLocaleString("default", { month: "short" });
+          const year = date.getFullYear();
+          return (
+            <div className="col-lg-4" key={event.id}>
+              <div style={cardStyle}>
+                <div style={cardBodyStyle}>
+                  <div className="widget-49">
+                    <div className="widget-49-title-wrapper">
+                      <div style={datePrimaryStyle}>
+                        <span style={dateDayStyle}>{day}</span>
+                        <span style={dateMonthStyle}>{month}</span>
                       </div>
-                      <div className="widget-49-meeting-points">
-                        <span>{event.description}</span>
+                      <div style={meetingInfoStyle}>
+                        <span>
+                          <b>{event.title}</b>
+                        </span>
+                        <br />
+                        <span>
+                          <b>{event.location}</b>
+                        </span>
                       </div>
-                      <div className="widget-49-meeting-action">
-                        <a
-                          href="#"
-                          className="btn btn-sm btn-flash-border-primary"
-                        >
-                          {`${day}-${month}-${year}`}
-                        </a>
-                      </div>
+                    </div>
+                    <div className="widget-49-meeting-points">
+                      <span>{event.description}</span>
+                    </div>
+                    <div className="widget-49-meeting-action">
+                      <a href="#" style={btnStyle}>
+                        {`${day}-${month}-${year}`}
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
